@@ -150,6 +150,7 @@ class ViewController: FormViewController {
             <<< TextAreaRow("描述") {
                 $0.placeholder = $0.tag
             }
+           
         
     }
     
@@ -165,6 +166,25 @@ class ViewController: FormViewController {
         case Every_Year = "每年"
 
         var description : String { return rawValue }
+    }
+}
+
+public protocol PresenterRowType: TypedRowType {
+    associatedtype ProviderType : UIViewController, TypedRowControllerType
+    var presentationMode: PresentationMode<ProviderType>? { get set }
+    var onPresentCallback: ((FormViewController, ProviderType)->())? { get set }
+}
+
+public final class CustomPushRow<T: Equatable> : SelectorRow<T, PushSelectorCell<T>, RepeatViewController<T>>, RowType {
+
+    public required init(tag: String?) {
+        super.init(tag: tag)
+        presentationMode = .Show(controllerProvider: ControllerProvider.Callback {
+            let vc = RepeatViewController ()
+            return vc // ERROR
+            }, completionCallback: { vc in
+                vc.navigationController?.popViewControllerAnimated(true)
+        })
     }
 }
 
