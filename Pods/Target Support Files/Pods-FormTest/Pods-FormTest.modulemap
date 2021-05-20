@@ -1,0 +1,6 @@
+module Pods_FormTest {
+  umbrella header "Pods-FormTest-umbrella.h"
+
+  export *
+  module * { export * }
+}
