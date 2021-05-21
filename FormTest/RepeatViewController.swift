@@ -24,14 +24,37 @@ class RepeatViewController: FormViewController {
         for option in continents {
             form.last! <<< ListCheckRow<String>(option){ listRow in
                 listRow.title = option
+                listRow.tag = option
                 listRow.selectableValue = option
                 listRow.value = nil
             }
             .onChange { row in
-                if let section = self.form.sectionBy(tag: "test")
-                {
-                    section.hidden = true
-                    section.evaluateHidden()
+                if row.tag == "无" {
+                    if let section = self.form.sectionBy(tag: "test")
+                    {
+                        section.hidden = true
+                        section.evaluateHidden()
+                    }
+                } else if row.tag == "每天" {
+                    if let section = self.form.sectionBy(tag: "test")
+                    {
+                        section.hidden = false
+                        section.evaluateHidden()
+                    }
+                    if let everyDayrow = self.form.rowBy(tag: "天数") {
+                        everyDayrow.hidden = true
+                        everyDayrow.evaluateHidden()
+                    }
+                } else if row.tag != "无" || row.tag != "每天" {
+                    if let section = self.form.sectionBy(tag: "test")
+                    {
+                        section.hidden = false
+                        section.evaluateHidden()
+                    }
+                    if let everyDayrow = self.form.rowBy(tag: "天数") {
+                        everyDayrow.hidden = false
+                        everyDayrow.evaluateHidden()
+                    }
                 }
             }
             
@@ -42,12 +65,15 @@ class RepeatViewController: FormViewController {
         }
         <<< PushRow<String> {
             $0.title = "间隔"
+            $0.tag = "间隔"
         }
         <<< PushRow<String> {
             $0.title = "天数"
+            $0.tag = "天数"
         }
         <<< PushRow<String> {
             $0.title = "直到"
+            $0.tag = "直到"
         }
     }
     
