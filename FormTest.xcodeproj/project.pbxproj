@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B0A70891342949AEC6F82DF2 /* libPods-FormTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 98283FF665D31E9F9442CA8C /* libPods-FormTest.a */; };
+		C07401482657A19400430312 /* EveryDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C07401472657A19400430312 /* EveryDayViewController.swift */; };
 		C090354526561512001E9596 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C090354426561512001E9596 /* AppDelegate.swift */; };
 		C090354726561512001E9596 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C090354626561512001E9596 /* SceneDelegate.swift */; };
 		C090354926561512001E9596 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C090354826561512001E9596 /* ViewController.swift */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		7E7B2D391DA1EDB732EB36DC /* Pods-FormTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FormTest.release.xcconfig"; path = "Target Support Files/Pods-FormTest/Pods-FormTest.release.xcconfig"; sourceTree = "<group>"; };
 		98283FF665D31E9F9442CA8C /* libPods-FormTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FormTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C07401472657A19400430312 /* EveryDayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryDayViewController.swift; sourceTree = "<group>"; };
 		C090354126561512001E9596 /* FormTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FormTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C090354426561512001E9596 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C090354626561512001E9596 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				C090354626561512001E9596 /* SceneDelegate.swift */,
 				C090354826561512001E9596 /* ViewController.swift */,
 				C090355826563EF0001E9596 /* RepeatViewController.swift */,
+				C07401472657A19400430312 /* EveryDayViewController.swift */,
 				C090354A26561512001E9596 /* Main.storyboard */,
 				C090354D26561513001E9596 /* Assets.xcassets */,
 				C090354F26561513001E9596 /* LaunchScreen.storyboard */,
@@ -191,6 +194,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C090354926561512001E9596 /* ViewController.swift in Sources */,
+				C07401482657A19400430312 /* EveryDayViewController.swift in Sources */,
 				C090355926563EF0001E9596 /* RepeatViewController.swift in Sources */,
 				C090354526561512001E9596 /* AppDelegate.swift in Sources */,
 				C090354726561512001E9596 /* SceneDelegate.swift in Sources */,
