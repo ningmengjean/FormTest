@@ -141,7 +141,8 @@ class ViewController: FormViewController {
 
            PushRow<String>{
                 $0.title = "重复"
-            }
+                $0.value = "无"
+           }
         form +++
             
             TextAreaRow("描述") {
