@@ -58,34 +58,65 @@ class RepeatViewController: FormViewController {
                 }
             }
         
-        form +++ Section() {
-            $0.tag = "day"
-        }
-        <<< PushRow<String> {
-            $0.title = "间隔"
-            $0.tag = "间隔"
+        form +++ Section() { section in
             let repeatInterval: RepeatInterval = .天
             switch repeatInterval {
             case .天:
-                $0.value = "1\(RepeatInterval.天.rawValue)"
-                $0.options = returnArray(unit:RepeatInterval.天.rawValue)
+                section.tag = "day"
+                PushRow<String> {
+                    $0.title = "间隔"
+                    $0.tag = "间隔"
+                    $0.value = "1\(RepeatInterval.天.rawValue)"
+                    $0.options = self.returnArray(unit:RepeatInterval.天.rawValue)
+                }.onPresent({ (_, vc) in
+                    vc.enableDeselection = false
+                    vc.dismissOnSelection = false
+                })
+                <<< ButtonRow("直到") { (row: ButtonRow) -> Void in
+                    row.title = row.tag
+                    row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: {  return EveryDayViewController() }),
+                                                 onDismiss: nil
+                    )
+                }
             case .月:
-                $0.value = "1\(RepeatInterval.月.rawValue)"
-                $0.options = returnArray(unit:RepeatInterval.月.rawValue)
+                section.tag = "month"
+                PushRow<String> {
+                    $0.title = "间隔"
+                    $0.tag = "间隔"
+                    $0.value = "1\(RepeatInterval.月.rawValue)"
+                    $0.options = self.returnArray(unit:RepeatInterval.月.rawValue)
+                }.onPresent({ (_, vc) in
+                    vc.enableDeselection = false
+                    vc.dismissOnSelection = false
+                })
+                <<< ButtonRow("直到") { (row: ButtonRow) -> Void in
+                    row.title = row.tag
+                    row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: {  return EveryDayViewController() }),
+                                                 onDismiss: nil
+                    )
+                }
+                
             case .年:
-                $0.value = "1\(RepeatInterval.年.rawValue)"
-                $0.options = returnArray(unit:RepeatInterval.年.rawValue)
+                section.tag = "year"
+                PushRow<String> {
+                    $0.title = "间隔"
+                    $0.tag = "间隔"
+                    $0.value = "1\(RepeatInterval.年.rawValue)"
+                    $0.options = self.returnArray(unit:RepeatInterval.年.rawValue)
+                }.onPresent({ (_, vc) in
+                    vc.enableDeselection = false
+                    vc.dismissOnSelection = false
+                })
+                <<< ButtonRow("直到") { (row: ButtonRow) -> Void in
+                    row.title = row.tag
+                    row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: {  return EveryDayViewController() }),
+                                                 onDismiss: nil
+                    )
+                }
+                
             }
-        }.onPresent({ (_, vc) in
-            vc.enableDeselection = false
-            vc.dismissOnSelection = false
-        })
-        <<< ButtonRow("直到") { (row: ButtonRow) -> Void in
-            row.title = row.tag
-            row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: {  return EveryDayViewController() }),
-                                         onDismiss: nil
-            )
         }
+       
         
         form +++ Section() {
             $0.tag = "week"
