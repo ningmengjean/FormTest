@@ -73,7 +73,7 @@ class EventUntilViewController: FormViewController {
                 until = foreverRow.value!
             } else if specDateRow.value != nil {
                 let dateFormat = DateFormatter()
-                dateFormat.dateFormat = "YYYY-MM-dd"
+                dateFormat.dateFormat = "YYYY年MM月dd日"
                 specDate = dateFormat.string(from:specDateRow.value!)
             }
         }

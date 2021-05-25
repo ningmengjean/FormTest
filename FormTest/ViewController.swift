@@ -12,25 +12,6 @@ class NativeEventNavigationController: UINavigationController, RowControllerType
     var onDismissCallback : ((UIViewController) -> ())?
 }
 
-//public protocol PresenterRowType: TypedRowType {
-//    associatedtype ProviderType : UIViewController, TypedRowControllerType
-//    var presentationMode: PresentationMode<ProviderType>? { get set }
-//    var onPresentCallback: ((FormViewController, ProviderType)->())? { get set }
-//}
-//
-//public final class CustomPushRow<T: Equatable>: SelectorRow<PushSelectorCell<T>, SelectorViewController<T>>, RowType {
-//
-//    public required init(tag: String?) {
-//        super.init(tag: tag)
-//        presentationMode = .show(controllerProvider: ControllerProvider.callback {
-//            return SelectorViewController<T>(){ _ in }
-//            }, onDismiss: { vc in
-//                _ = vc.navigationController?.popViewController(animated: true)
-//        })
-//    }
-//}
-
-
 class ViewController: FormViewController {
     
     override func viewDidLoad() {

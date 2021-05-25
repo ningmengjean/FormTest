@@ -14,12 +14,15 @@ class RepeatViewController: FormViewController, EventUntilDelegate {
     
     func eventUntil(until: String?, specDate: String?) {
         let row: ButtonRow? = self.form.rowBy(tag: "dayUntil")
+        row?.cellStyle = .value1
         if until != nil {
-            row?.value = until
-            row?.reload()
+            row?.cellUpdate({ cell, row in
+                cell.detailTextLabel?.text = until
+            })
         } else if specDate != nil {
-            row?.value = specDate
-            row?.reload()
+            row?.cellUpdate({ cell, row in
+                cell.detailTextLabel?.text = specDate
+            })
         }
     }
     
@@ -121,12 +124,11 @@ class RepeatViewController: FormViewController, EventUntilDelegate {
         <<< ButtonRow() { (row: ButtonRow) -> Void in
             row.tag = "dayUntil"
             row.title = "直到"
-            
-            row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: { let vc = EventUntilViewController()
+            row.cellStyle = .value1
+            row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: {
+                                                                                            let vc = EventUntilViewController()
                                                                                             vc.delegate = self
-                                                                                            return vc }),
-                                         onDismiss: nil
-            )
+                                                                                            return vc }), onDismiss: nil)
         }
         
         form +++ Section() { section in
