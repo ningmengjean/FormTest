@@ -8,17 +8,26 @@
 import UIKit
 import Eureka
 
-protocol EventUntilDelegate: AnyObject {
-    func eventUntil() -> String
-}
 
-class RepeatViewController: FormViewController {
+
+class RepeatViewController: FormViewController, EventUntilDelegate {
+    
+    func eventUntil(until: String?, specDate: String?) {
+        let row: ButtonRow? = self.form.rowBy(tag: "dayUntil")
+        if until != nil {
+            row?.value = until
+            row?.reload()
+        } else if specDate != nil {
+            row?.value = specDate
+            row?.reload()
+        }
+    }
     
     weak var delegate: EventUntilDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         initForm()
     }
     
@@ -113,11 +122,10 @@ class RepeatViewController: FormViewController {
             row.tag = "dayUntil"
             row.title = "直到"
             
-            
-            row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: { return EventUntilViewController() }),
-                                         onDismiss: { [weak self] _ in
-                                            row.value = self?.delegate?.eventUntil()
-                                         }
+            row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: { let vc = EventUntilViewController()
+                                                                                            vc.delegate = self
+                                                                                            return vc }),
+                                         onDismiss: nil
             )
         }
         

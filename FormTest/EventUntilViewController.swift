@@ -8,13 +8,16 @@
 import UIKit
 import Eureka
 
-class EventUntilViewController: FormViewController, EventUntilDelegate {
+protocol EventUntilDelegate: AnyObject {
+    func eventUntil(until: String?, specDate: String?)
+}
+
+class EventUntilViewController: FormViewController {
     
-    let vc = RepeatViewController()
+    weak var delegate: EventUntilDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        vc.delegate = self
         initForm()
     }
     
@@ -61,17 +64,19 @@ class EventUntilViewController: FormViewController, EventUntilDelegate {
         })
     }
     
-    func eventUntil() -> String {
-        var text = ""
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        var until:String?
+        var specDate:String?
         if let foreverRow: ListCheckRow<String> = form.rowBy(tag: "永远"), let specDateRow: DateRow = form.rowBy(tag: "sepcDate") {
             if foreverRow.value != nil {
-                text = foreverRow.value!
+                until = foreverRow.value!
             } else if specDateRow.value != nil {
                 let dateFormat = DateFormatter()
                 dateFormat.dateFormat = "YYYY-MM-dd"
-                text = dateFormat.string(from:specDateRow.value!)
+                specDate = dateFormat.string(from:specDateRow.value!)
             }
         }
-        return text
+        delegate?.eventUntil(until: until, specDate: specDate)
     }
 }
