@@ -33,6 +33,17 @@ class RepeatViewController: FormViewController, EventUntilDelegate {
                     cell.detailTextLabel?.text = specDate
                 })
             }
+        } else if let yearRow: ButtonRow = self.form.rowBy(tag: "yearUntil") {
+            yearRow.cellStyle = .value1
+            if until != nil {
+                yearRow.cellUpdate({ cell, row in
+                    cell.detailTextLabel?.text = until
+                })
+            } else if specDate != nil {
+                yearRow.cellUpdate({ cell, row in
+                    cell.detailTextLabel?.text = specDate
+                })
+            }
         }
        
     }
@@ -179,9 +190,11 @@ class RepeatViewController: FormViewController, EventUntilDelegate {
         <<< ButtonRow() { (row: ButtonRow) -> Void in
             row.tag = "yearUntil"
             row.title = "直到"
-            row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: {  return EventUntilViewController() }),
-                                         onDismiss: nil
-            )
+            row.cellStyle = .value1
+            row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: {
+                                                                                            let vc = EventUntilViewController()
+                                                                                            vc.delegate = self
+                                                                                            return vc }), onDismiss: nil)
         }
         
         form +++ Section() {
