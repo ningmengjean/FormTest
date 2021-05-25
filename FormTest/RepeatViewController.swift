@@ -8,22 +8,33 @@
 import UIKit
 import Eureka
 
-
-
 class RepeatViewController: FormViewController, EventUntilDelegate {
     
     func eventUntil(until: String?, specDate: String?) {
-        let row: ButtonRow? = self.form.rowBy(tag: "dayUntil")
-        row?.cellStyle = .value1
-        if until != nil {
-            row?.cellUpdate({ cell, row in
-                cell.detailTextLabel?.text = until
-            })
-        } else if specDate != nil {
-            row?.cellUpdate({ cell, row in
-                cell.detailTextLabel?.text = specDate
-            })
+        if let dayRow: ButtonRow = self.form.rowBy(tag: "dayUntil") {
+            dayRow.cellStyle = .value1
+            if until != nil {
+                dayRow.cellUpdate({ cell, row in
+                    cell.detailTextLabel?.text = until
+                })
+            } else if specDate != nil {
+                dayRow.cellUpdate({ cell, row in
+                    cell.detailTextLabel?.text = specDate
+                })
+            }
+        } else if let monthRow: ButtonRow = self.form.rowBy(tag: "monthUntil") {
+            monthRow.cellStyle = .value1
+            if until != nil {
+                monthRow.cellUpdate({ cell, row in
+                    cell.detailTextLabel?.text = until
+                })
+            } else if specDate != nil {
+                monthRow.cellUpdate({ cell, row in
+                    cell.detailTextLabel?.text = specDate
+                })
+            }
         }
+       
     }
     
     weak var delegate: EventUntilDelegate?
@@ -146,9 +157,11 @@ class RepeatViewController: FormViewController, EventUntilDelegate {
         <<< ButtonRow() { (row: ButtonRow) -> Void in
             row.tag = "monthUntil"
             row.title = "直到"
-            row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: {  return EventUntilViewController() }),
-                                         onDismiss: nil
-            )
+            row.cellStyle = .value1
+            row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: {
+                                                                                            let vc = EventUntilViewController()
+                                                                                            vc.delegate = self
+                                                                                            return vc }), onDismiss: nil)
         }
         
         form +++ Section() { section in
