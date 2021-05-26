@@ -8,38 +8,47 @@
 import UIKit
 import Eureka
 
-class NativeEventNavigationController: UINavigationController, RowControllerType {
-    var onDismissCallback : ((UIViewController) -> ())?
-}
-
-class ViewController: FormViewController {
+class ViewController: FormViewController, RepeatDateDelegate {
+    
+    var repeatInfo = [String: Any]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initializeForm()
     }
     
+    func extractRepeatDate(info: [String : Any], type: String) {
+        self.repeatInfo = info
+        if let row: ButtonRow = self.form.rowBy(tag: "repeat") {
+            row.cellStyle = .value1
+            row.cellUpdate { cell, row in
+               row.value = type
+               cell.detailTextLabel?.text = type
+            }
+        }
+    }
+    
     private func initializeForm() {
 
         form +++
 
-            TextRow("标题").cellSetup { cell, row in
+            TextRow("summary").cellSetup { cell, row in
                 row.title = "标题："
                 cell.textField.placeholder = "请输入标题"
             }
 
-            <<< TextRow("地点").cellSetup { cell, row in
+            <<< TextRow("location").cellSetup { cell, row in
                 row.title = "地点："
                 cell.textField.placeholder = "请输入地点"
             }
 
             +++
 
-            SwitchRow("全天") {
-                $0.title = $0.tag
+            SwitchRow("isAllDay") {
+                $0.title = "全天"
                 }.onChange { [weak self] row in
-                    let startDate: DateTimeInlineRow! = self?.form.rowBy(tag: "开始时间")
-                    let endDate: DateTimeInlineRow! = self?.form.rowBy(tag: "结束时间")
+                    let startDate: DateTimeInlineRow! = self?.form.rowBy(tag: "startDate")
+                    let endDate: DateTimeInlineRow! = self?.form.rowBy(tag: "endDate")
 
                     if row.value ?? false {
                         startDate.dateFormatter?.dateStyle = .medium
@@ -59,12 +68,12 @@ class ViewController: FormViewController {
                     endDate.inlineRow?.updateCell()
             }
 
-            <<< DateTimeInlineRow("开始时间") {
-                $0.title = $0.tag
+            <<< DateTimeInlineRow("startDate") {
+                $0.title = "开始时间"
                 $0.value = Date()
                 }
                 .onChange { [weak self] row in
-                    let endRow: DateTimeInlineRow! = self?.form.rowBy(tag: "结束时间")
+                    let endRow: DateTimeInlineRow! = self?.form.rowBy(tag: "endDate")
                     if row.value?.compare(endRow.value!) == .orderedDescending {
                         endRow.value = Date(timeInterval: 60*60*24, since: row.value!)
                         endRow.cell!.backgroundColor = .white
@@ -73,7 +82,7 @@ class ViewController: FormViewController {
                 }
                 .onExpandInlineRow { [weak self] cell, row, inlineRow in
                     inlineRow.cellUpdate() { cell, row in
-                        let allRow: SwitchRow! = self?.form.rowBy(tag: "全天")
+                        let allRow: SwitchRow! = self?.form.rowBy(tag: "isAllDay")
                         if allRow.value ?? false {
                             cell.datePicker.datePickerMode = .date
                         }
@@ -88,12 +97,12 @@ class ViewController: FormViewController {
                     cell.detailTextLabel?.textColor = cell.tintColor
             }
 
-            <<< DateTimeInlineRow("结束时间"){
-                $0.title = $0.tag
+            <<< DateTimeInlineRow("endDate"){
+                $0.title = "结束时间"
                 $0.value = Date().addingTimeInterval(60*60*25)
                 }
                 .onChange { [weak self] row in
-                    let startRow: DateTimeInlineRow! = self?.form.rowBy(tag: "开始时间")
+                    let startRow: DateTimeInlineRow! = self?.form.rowBy(tag: "startDate")
                     if row.value?.compare(startRow.value!) == .orderedAscending {
                         row.cell!.backgroundColor = .red
                     }
@@ -104,7 +113,7 @@ class ViewController: FormViewController {
                 }
                 .onExpandInlineRow { [weak self] cell, row, inlineRow in
                     inlineRow.cellUpdate { cell, dateRow in
-                        let allRow: SwitchRow! = self?.form.rowBy(tag: "全天")
+                        let allRow: SwitchRow! = self?.form.rowBy(tag: "isAllDay")
                         if allRow.value ?? false {
                             cell.datePicker.datePickerMode = .date
                         }
@@ -120,32 +129,23 @@ class ViewController: FormViewController {
                 }
         form +++
 
-           PushRow<String>{
-                $0.title = "重复"
-                $0.value = "无"
-           }
+            ButtonRow() { (row: ButtonRow) -> Void in
+                row.tag = "repeat"
+                row.title = "重复"
+                row.cellStyle = .value1
+                row.presentationMode = .show(controllerProvider: ControllerProvider.callback(builder: {
+                                                                                                let vc = RepeatViewController()
+                                                                                                vc.repeatDelegate = self
+                                                                                                return vc }), onDismiss: nil)
+            }.cellSetup({ cell, row in
+                row.cellStyle = .value1
+                cell.detailTextLabel?.text = "无"
+            })
         form +++
             
-            TextAreaRow("描述") {
-                $0.placeholder = $0.tag
+            TextAreaRow("description") {
+                $0.placeholder = "描述"
             }
-           
-        
-    }
-    
-    @objc func cancelTapped(_ barButtonItem: UIBarButtonItem) {
-        (navigationController as? NativeEventNavigationController)?.onDismissCallback?(self)
-    }
-    
-
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 2 {
-            if indexPath.row == 0 {
-                let vc = RepeatViewController()
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
-        }
     }
 }
 

@@ -9,16 +9,46 @@ import UIKit
 import Eureka
 
 protocol EventUntilDelegate: AnyObject {
-    func eventUntil(until: String?, specDate: String?)
+    func eventUntil(until: String?, specDate: String?, untilType: UntilType)
 }
 
 class EventUntilViewController: FormViewController {
     
+    var untilType = UntilType.none
     weak var delegate: EventUntilDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setNavLeftButton()
         initForm()
+    }
+    
+    func setNavLeftButton() {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 25, height: 25 )
+        button.setImage(UIImage.init(named: "back"), for: .normal)
+        button.addTarget(self, action: #selector(tapBack), for: .touchUpInside)
+        let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 35)));
+        view.addSubview(button)
+        
+        let leftButton = UIBarButtonItem(customView: view)
+        self.navigationItem.leftBarButtonItem = leftButton
+    }
+    
+    @objc func tapBack() {
+        var until:String?
+        var specDate:String?
+        if let foreverRow: ListCheckRow<String> = form.rowBy(tag: "永远"), let specDateRow: DateRow = form.rowBy(tag: "sepcDate") {
+            if foreverRow.value != nil {
+                until = foreverRow.value!
+            } else if specDateRow.value != nil {
+                let dateFormat = DateFormatter()
+                dateFormat.dateFormat = "YYYY年MM月dd日"
+                specDate = dateFormat.string(from:specDateRow.value!)
+            }
+        }
+        delegate?.eventUntil(until: until, specDate: specDate, untilType: untilType)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func initForm() {
@@ -64,19 +94,19 @@ class EventUntilViewController: FormViewController {
         })
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        var until:String?
-        var specDate:String?
-        if let foreverRow: ListCheckRow<String> = form.rowBy(tag: "永远"), let specDateRow: DateRow = form.rowBy(tag: "sepcDate") {
-            if foreverRow.value != nil {
-                until = foreverRow.value!
-            } else if specDateRow.value != nil {
-                let dateFormat = DateFormatter()
-                dateFormat.dateFormat = "YYYY年MM月dd日"
-                specDate = dateFormat.string(from:specDateRow.value!)
-            }
-        }
-        delegate?.eventUntil(until: until, specDate: specDate)
-    }
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        var until:String?
+//        var specDate:String?
+//        if let foreverRow: ListCheckRow<String> = form.rowBy(tag: "永远"), let specDateRow: DateRow = form.rowBy(tag: "sepcDate") {
+//            if foreverRow.value != nil {
+//                until = foreverRow.value!
+//            } else if specDateRow.value != nil {
+//                let dateFormat = DateFormatter()
+//                dateFormat.dateFormat = "YYYY年MM月dd日"
+//                specDate = dateFormat.string(from:specDateRow.value!)
+//            }
+//        }
+//        delegate?.eventUntil(until: until, specDate: specDate, untilType: untilType)
+//    }
 }
